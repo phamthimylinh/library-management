@@ -33,6 +33,10 @@ export class LanguagesService {
     }
 
     async remove(id: number): Promise<void> {
-        await this.languageRepository.delete(id);
+        const language = await this.languageRepository.findOneBy({ id });
+        if (!language) {
+            throw new NotFoundException(`Language with ID ${id} not found`);
+        }
+        await this.languageRepository.softDelete(id);
     }
 }
