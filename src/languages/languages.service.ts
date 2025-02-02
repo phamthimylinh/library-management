@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Language } from './language.entity';
 import { Repository } from 'typeorm';
@@ -14,8 +14,12 @@ export class LanguagesService {
         return this.languageRepository.find();
     }
 
-    findOne(id: number): Promise<Language | null> {
-        return this.languageRepository.findOneBy({ id });
+    async findOne(id: number): Promise<Language> {
+        const language = await this.languageRepository.findOneBy({ id });
+        if (!language) {
+            throw new NotFoundException(`Language with ID ${id} not found`);
+        }
+        return language;
     }
 
     async create(languageData: Partial<Language>): Promise<Language> {

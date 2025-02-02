@@ -1,5 +1,6 @@
 export class ResponseDto<T> {
-    code: number;
+    statusCode: number;
     message: string;
     data?: T;
+    error?: T;
 }
